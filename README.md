@@ -35,6 +35,19 @@ User authentication and authorization are handled via ASP.NET Identity, integrat
 - **Generic Repository Pattern** for data access
 - **Unit Testing** to ensure reliability and maintainability
 
+## Stored Procedures
+
+The system uses **stored procedures** in the database to handle specific operations that require optimized performance or complex querying logic.
+
+### Use Cases:
+- Generating detailed **customer reports** with aggregated charging data.
+- Retrieving historical charge transactions filtered by date or status.
+- Supporting export features (Excel/PDF) by preparing pre-joined result sets.
+- Centralizing critical business logic to ensure consistency and reduce duplication in the application layer.
+
+Using stored procedures helps improve **performance**, **security**, and **data integrity**, especially for reporting and read-heavy operations.
+
+
 ## Business Rules
 
 - The **first charge** for a customer must be **at least 100 units**.
