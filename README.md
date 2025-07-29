@@ -1,125 +1,60 @@
-# company-smart-charging-system
+# Smart Charging System - Backend
 
+## Project Overview
 
-# 🔌 Smart Charging System - Backend (Clean Architecture)
+The Smart Charging System is designed to manage the relationship between customers, their contracts, electric meters, and charging operations. The goal is to build a secure and scalable backend system that ensures accurate tracking of charging transactions, monitors customer contract activity, and enforces specific business rules.
 
-## 📚 Project Description
+This backend is built using **ASP.NET Core** and follows the principles of **Clean Architecture**, providing separation of concerns between business logic, infrastructure, and presentation layers.
 
-This is a backend system for managing contracts, meters, charge transactions, and customers for a smart charging platform. The system tracks customer contracts, enforces business rules like minimum initial charge, and automatically closes contracts that haven't been charged in 6 months. It supports authentication, logging, reporting, background services, and import/export functionalities.
+## Key Modules
 
----
+### 1. Contracts
+Each contract links a customer to a specific meter. It contains unique identification, customer and meter references, and flags to indicate if the contract is closed or deleted.
 
-## 🧱 Entities and Relationships
+### 2. Customers
+A customer can have multiple contracts. Each customer record includes personal details, charge history, and other key identifiers.
 
-### 1. **Contract**
-- Fields: `unitqCode`, `customerId`, `meterId`, `customerCode`, `isClosed`, `onClosed`, `isDeleted`
-- Relationships:
-  - One Contract has **one Meter**
-  - One Contract belongs to **one Customer**
+### 3. Meters
+Each meter is tied to a single contract and is used to track the power usage and charging operations.
 
-### 2. **Customer**
-- Fields: `id`, `chargeNumber`, `name`, `nationalId`, `serial`, `amountPadged`, `date`, `netPadged`
-- Relationships:
-  - One Customer has **many Contracts**
+### 4. Charge Transactions
+Represents individual charging operations and is associated with both a meter and a contract.
 
-### 3. **Meter**
-- Related to **one Contract**
+### 5. Users
+User authentication and authorization are handled via ASP.NET Identity, integrated with JWT tokens for secure API access.
 
-### 4. **ChargeTransaction**
-- Related to:
-  - **One Contract**
-  - **One Meter**
+## System Features
 
-### 5. **User**
-- Uses **ASP.NET Identity**
+- **Authentication & Authorization** using JWT (access and refresh tokens)
+- **Clean Architecture** structure (Domain, Application, Infrastructure, API)
+- **Soft Delete** support with global query filters
+- **Custom Middleware** for centralized exception handling and logging
+- **Background Services** using Hangfire for automated operations
+- **Excel Import** and **PDF/Excel Export** of data
+- **Stored Procedures** for efficient reporting
+- **Generic Repository Pattern** for data access
+- **Unit Testing** to ensure reliability and maintainability
 
----
+## Business Rules
 
-## ⚙️ Features
+- The **first charge** for a customer must be **at least 100 units**.
+- If a customer does **not perform any charge for 6 months**, their contract will be automatically **closed** by the system.
 
-- ✅ Clean Architecture (Domain, Application, Infrastructure, API)
-- 🔐 JWT Authentication (Access + Refresh Tokens)
-- 🧠 Custom Middleware (Exception Handling + Logging)
-- 📊 Customer Reports (via Stored Procedures)
-- 📥 Import Excel Sheets
-- 📤 Export PDF + Excel Sheets
-- 🧾 Soft Delete with Query Filters
-- 🕒 Background Services using Hangfire:
-  - Automatically close contracts if no charge in 6 months
-- 🧪 Unit Testing
-- 🧰 Generic Repository Pattern
-- 🧩 Extension Methods and API Configuration
+## Technology Stack
 
----
+- ASP.NET Core Web API
+- Entity Framework Core
+- SQL Server
+- Hangfire
+- JWT (Access & Refresh Tokens)
+- ClosedXML (Excel import/export)
+- iTextSharp / DinkToPdf (PDF generation)
+- AutoMapper (optional)
+- GitHub for version control and collaboration
 
-## 🧷 Business Rules
+## Future Scope
 
-1. First charge **must be at least 100**.
-2. If a customer **does not charge for 6 months**, their contract will be **automatically closed**.
-
----
-
-## 🧑‍💻 Tech Stack
-
-- ✅ ASP.NET Core Web API
-- ✅ Entity Framework Core
-- ✅ SQL Server
-- ✅ Clean Architecture
-- ✅ JWT Authentication
-- ✅ Hangfire
-- ✅ ClosedXML (for Excel)
-- ✅ iTextSharp / DinkToPdf (for PDF)
-- ✅ AutoMapper (optional)
-- ✅ GitHub + Git Flow
+After completing the backend, the system will be extended with a frontend interface using modern web technologies. The backend has been designed in a way that makes it easy to integrate with any frontend framework.
 
 ---
 
-## 🚀 Getting Started
-
-1. Clone the repo
-2. Set your database connection string in `appsettings.json`
-3. Run migrations and update the database
-4. Run the API project
-5. Access Swagger at: `/swagger/index.html`
-
----
-
-## 📌 Task Breakdown (Sub Tasks)
-
-### 🔹 Project Setup
-- [ ] Create Clean Architecture layers
-- [ ] Configure EF Core and database context
-- [ ] Configure JWT authentication
-- [ ] Setup custom middleware (logging & exception)
-
-### 🔹 Entities & Database
-- [ ] Implement Contract, Customer, Meter, ChargeTransaction entities
-- [ ] Configure relationships using Fluent API
-- [ ] Seed initial data (if needed)
-
-### 🔹 Business Logic
-- [ ] Add validation: First charge >= 100
-- [ ] Background job: Auto-close contract after 6 months (Hangfire)
-- [ ] Soft delete with global filters
-
-### 🔹 Features
-- [ ] Import Excel file (ClosedXML)
-- [ ] Export Excel & PDF
-- [ ] Reports using Stored Procedures
-- [ ] Unit tests for services
-
-### 🔹 Authentication
-- [ ] User registration and login with JWT (access + refresh token)
-- [ ] Protect endpoints with authorization
-
-### 🔹 GitHub Workflow
-- [ ] Create main/dev branches
-- [ ] Each feature in a separate branch
-- [ ] Pull Requests for review before merge
-
----
-
-## 📬 Contact
-
-Developed by the Engineering Team  
-Powered by ASP.NET Core Clean Architecture  
