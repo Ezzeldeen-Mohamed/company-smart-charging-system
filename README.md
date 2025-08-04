@@ -121,5 +121,5 @@ This is a backend system for managing contracts, meters, charge transactions, an
 
 ## 📬 Contact
 
-Developed by the Engineering Team  
+Developed by the Elsewedy international School Students  
 Powered by ASP.NET Core Clean Architecture  
