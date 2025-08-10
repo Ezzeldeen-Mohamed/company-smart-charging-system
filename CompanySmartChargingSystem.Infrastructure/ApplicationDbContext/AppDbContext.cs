@@ -16,10 +16,8 @@ namespace CompanySmartChargingSystem.Domain.ApplicationDbContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
 
-            // Unique Constraints
             modelBuilder.Entity<Contract>()
                 .HasIndex(c => c.CustomerCode)
                 .IsUnique();
@@ -36,12 +34,24 @@ namespace CompanySmartChargingSystem.Domain.ApplicationDbContext
                 .HasIndex(m => m.Serial)
                 .IsUnique();
 
-            // Soft Delete Filters
+            modelBuilder.Entity<ChargeTransaction>()
+                .HasOne(ct => ct.Meter)
+                .WithMany(m => m.ChargeTransactions)
+                .HasForeignKey(ct => ct.MeterId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            modelBuilder.Entity<ChargeTransaction>()
+                .HasOne(ct => ct.Contract)
+                .WithMany(c => c.ChargeTransactions)
+                .HasForeignKey(ct => ct.ContractId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
             modelBuilder.Entity<Contract>().HasQueryFilter(c => !c.IsDeleted);
             modelBuilder.Entity<Customer>().HasQueryFilter(c => !c.IsDeleted);
             modelBuilder.Entity<Meter>().HasQueryFilter(m => !m.IsDeleted);
             modelBuilder.Entity<ChargeTransaction>().HasQueryFilter(ct => !ct.IsDeleted);
         }
+
     }
 
 }
