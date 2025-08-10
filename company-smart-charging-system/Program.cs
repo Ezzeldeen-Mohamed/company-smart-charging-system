@@ -3,6 +3,8 @@ using CompanySmartChargingSystem.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using CompanySmartChargingSystem.Application.Services.IService;
+using CompanySmartChargingSystem.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,9 @@ builder.Services.AddIdentity<User, IdentityRole>(optin => {
     optin.User.RequireUniqueEmail = true;
 }).AddEntityFrameworkStores<AppDbContext>();
 
+builder.Services.AddScoped(typeof(IBaseRepo<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddAutoMapper(typeof(CompanySmartChargingSystem.Application.DTOs.MappingProfile));
 
 var app = builder.Build();
 
