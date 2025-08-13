@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 
 namespace CompanySmartChargingSystem.Domain.Entities
 {
-    public class Meter
+    public class Meter : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
-
         [Required]
         [MaxLength(50)]
         public string Serial { get; set; } = string.Empty;
@@ -19,8 +16,6 @@ namespace CompanySmartChargingSystem.Domain.Entities
         public string ChargeNumber { get; set; } = string.Empty;
 
         public bool IsUsed { get; set; }
-
-        public bool IsDeleted { get; set; }
 
         public ICollection<Contract>? Contracts { get; set; }
         public ICollection<ChargeTransaction> ?ChargeTransactions { get; set; }

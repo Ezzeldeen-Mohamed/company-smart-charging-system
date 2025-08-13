@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace CompanySmartChargingSystem.Domain.Entities
 {
-    public class ChargeTransaction
+    public class ChargeTransaction : BaseEntity
     {
-        public int Id { get; set; }
-
         [Required]
         public int MeterId { get; set; }
         public Meter ?Meter { get; set; }
@@ -25,8 +23,6 @@ namespace CompanySmartChargingSystem.Domain.Entities
         public decimal FeesValue { get; set; }
 
         public string ChargeNumber { get; set; } = string.Empty;
-
-        public bool IsDeleted { get; set; }
     }
 
 

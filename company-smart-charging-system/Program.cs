@@ -5,6 +5,12 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using CompanySmartChargingSystem.Application.Services.IService;
 using CompanySmartChargingSystem.Infrastructure;
+using CompanySmartChargingSystem.Infrastructure.JWT;
+using CompanySmartChargingSystem.Infrastructure.DataSeeding;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,9 +34,34 @@ builder.Services.AddIdentity<User, IdentityRole>(optin => {
 
 builder.Services.AddScoped(typeof(IBaseRepo<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IJWT, JWTRepo>();
+builder.Services.Configure<JWTConfig>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddAutoMapper(typeof(CompanySmartChargingSystem.Application.DTOs.MappingProfile));
 
+// Configure JWT Authentication
+var jwtConfig = builder.Configuration.GetSection("Jwt").Get<JWTConfig>();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtConfig.Issuer,
+        ValidAudience = jwtConfig.Audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Key))
+    };
+});
+
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -41,8 +72,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Seed Identity data (roles and admin user)
+await IdentityDataSeeder.SeedAsync(app.Services);
 
 app.Run();

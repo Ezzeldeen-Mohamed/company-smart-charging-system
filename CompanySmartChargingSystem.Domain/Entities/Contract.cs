@@ -7,11 +7,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CompanySmartChargingSystem.Domain.Entities
 {
-    public class Contract
+    public class Contract : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
-
         [Required]
         public string UniqueCode { get; set; } = Guid.NewGuid().ToString();
 
@@ -29,8 +26,6 @@ namespace CompanySmartChargingSystem.Domain.Entities
 
         public bool IsClosed { get; set; }
         public DateTime? OnClosed { get; set; }
-
-        public bool IsDeleted { get; set; }
 
         public ICollection<ChargeTransaction>? ChargeTransactions { get; set; }
     }

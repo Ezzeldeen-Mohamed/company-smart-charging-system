@@ -8,11 +8,8 @@ using System.Threading.Tasks;
 
 namespace CompanySmartChargingSystem.Domain.Entities
 {
-    public class Customer
+    public class Customer : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
-
         [Required]
         [MaxLength(100)]
         public string Name { get; set; } = string.Empty;
@@ -31,8 +28,6 @@ namespace CompanySmartChargingSystem.Domain.Entities
         public decimal NetPaid { get; set; }
 
         public string ChargeNumber { get; set; } = string.Empty;
-
-        public bool IsDeleted { get; set; }
 
         public ICollection<Contract> ?Contracts { get; set; }
     }
