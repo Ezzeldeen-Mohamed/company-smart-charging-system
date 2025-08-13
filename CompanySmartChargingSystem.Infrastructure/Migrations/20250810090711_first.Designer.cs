@@ -4,6 +4,7 @@ using CompanySmartChargingSystem.Domain.ApplicationDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanySmartChargingSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250810090711_first")]
+    partial class first
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -275,11 +278,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-<<<<<<< HEAD
-                    b.ToTable("Roles", (string)null);
-=======
                     b.ToTable("AspNetRoles", (string)null);
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -304,63 +303,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-<<<<<<< HEAD
-                    b.ToTable("RoleClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users", (string)null);
-=======
                     b.ToTable("AspNetRoleClaims", (string)null);
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -385,11 +328,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-<<<<<<< HEAD
-                    b.ToTable("UserClaims", (string)null);
-=======
                     b.ToTable("AspNetUserClaims", (string)null);
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -411,11 +350,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-<<<<<<< HEAD
-                    b.ToTable("UserLogins", (string)null);
-=======
                     b.ToTable("AspNetUserLogins", (string)null);
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -430,11 +365,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-<<<<<<< HEAD
-                    b.ToTable("UserRoles", (string)null);
-=======
                     b.ToTable("AspNetUserRoles", (string)null);
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -453,11 +384,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-<<<<<<< HEAD
-                    b.ToTable("UserTokens", (string)null);
-=======
                     b.ToTable("AspNetUserTokens", (string)null);
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                 });
 
             modelBuilder.Entity("CompanySmartChargingSystem.Domain.Entities.ChargeTransaction", b =>
@@ -465,21 +392,13 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
                     b.HasOne("CompanySmartChargingSystem.Domain.Entities.Contract", "Contract")
                         .WithMany("ChargeTransactions")
                         .HasForeignKey("ContractId")
-<<<<<<< HEAD
-                        .OnDelete(DeleteBehavior.Cascade)
-=======
                         .OnDelete(DeleteBehavior.Restrict)
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                         .IsRequired();
 
                     b.HasOne("CompanySmartChargingSystem.Domain.Entities.Meter", "Meter")
                         .WithMany("ChargeTransactions")
                         .HasForeignKey("MeterId")
-<<<<<<< HEAD
-                        .OnDelete(DeleteBehavior.Cascade)
-=======
                         .OnDelete(DeleteBehavior.Restrict)
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                         .IsRequired();
 
                     b.Navigation("Contract");

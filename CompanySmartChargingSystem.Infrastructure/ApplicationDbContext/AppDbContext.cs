@@ -17,17 +17,7 @@ namespace CompanySmartChargingSystem.Domain.ApplicationDbContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
-
-            // rename Identity tables
-
-            modelBuilder.Entity<IdentityRole>().ToTable("Roles");
-            modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
-            modelBuilder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
-            modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
-            modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
-            modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
 
             // Unique Constraints
             modelBuilder.Entity<Contract>()
@@ -46,29 +36,13 @@ namespace CompanySmartChargingSystem.Domain.ApplicationDbContext
                 .HasIndex(m => m.Serial)
                 .IsUnique();
 
-            // decimal precision
-            modelBuilder.Entity<ChargeTransaction>()
-                .Property(ct => ct.AmountPaid)
-                .HasColumnType("decimal(18,2)");
-            modelBuilder.Entity<ChargeTransaction>()
-                .Property(ct => ct.FeesValue)
-                .HasColumnType("decimal(18,2)");
-            modelBuilder.Entity<ChargeTransaction>()
-                .Property(ct => ct.NetValue)
-                .HasColumnType("decimal(18,2)");
-            modelBuilder.Entity<Customer>()
-                .Property(c => c.AmountPaid)
-                .HasColumnType("decimal(18,2)");
-            modelBuilder.Entity<Customer>()
-                .Property(c => c.NetPaid)
-                .HasColumnType("decimal(18,2)");
-
             // Soft Delete Filters
             modelBuilder.Entity<Contract>().HasQueryFilter(c => !c.IsDeleted);
             modelBuilder.Entity<Customer>().HasQueryFilter(c => !c.IsDeleted);
             modelBuilder.Entity<Meter>().HasQueryFilter(m => !m.IsDeleted);
             modelBuilder.Entity<ChargeTransaction>().HasQueryFilter(ct => !ct.IsDeleted);
         }
+
     }
 
 }
