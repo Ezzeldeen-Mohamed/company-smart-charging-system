@@ -5,8 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using CompanySmartChargingSystem.Application.Services.IService;
 using CompanySmartChargingSystem.Infrastructure;
-using CompanySmartChargingSystem.Infrastructure.JWT;
-using CompanySmartChargingSystem.Infrastructure.DataSeeding;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -35,6 +33,7 @@ builder.Services.AddIdentity<User, IdentityRole>(optin => {
 builder.Services.AddScoped(typeof(IBaseRepo<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IJWT, JWTRepo>();
+builder.Services.AddScoped<IChargeTransactionService, ChargeTransaction>();
 builder.Services.Configure<JWTConfig>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddAutoMapper(typeof(CompanySmartChargingSystem.Application.DTOs.MappingProfile));
 
