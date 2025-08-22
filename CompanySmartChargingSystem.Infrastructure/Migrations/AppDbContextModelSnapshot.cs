@@ -40,8 +40,14 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
                     b.Property<int>("ContractId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<decimal>("FeesValue")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -51,6 +57,9 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
                     b.Property<decimal>("NetValue")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -69,6 +78,9 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("CustomerCode")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -76,6 +88,9 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsClosed")
                         .HasColumnType("bit");
@@ -92,6 +107,9 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
                     b.Property<string>("UniqueCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -123,8 +141,14 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -147,6 +171,9 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NationalId")
@@ -167,6 +194,12 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -177,6 +210,9 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -275,11 +311,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-<<<<<<< HEAD
                     b.ToTable("Roles", (string)null);
-=======
-                    b.ToTable("AspNetRoles", (string)null);
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -304,63 +336,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-<<<<<<< HEAD
                     b.ToTable("RoleClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users", (string)null);
-=======
-                    b.ToTable("AspNetRoleClaims", (string)null);
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -385,11 +361,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-<<<<<<< HEAD
                     b.ToTable("UserClaims", (string)null);
-=======
-                    b.ToTable("AspNetUserClaims", (string)null);
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -411,11 +383,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-<<<<<<< HEAD
                     b.ToTable("UserLogins", (string)null);
-=======
-                    b.ToTable("AspNetUserLogins", (string)null);
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -430,11 +398,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-<<<<<<< HEAD
                     b.ToTable("UserRoles", (string)null);
-=======
-                    b.ToTable("AspNetUserRoles", (string)null);
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -453,11 +417,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-<<<<<<< HEAD
                     b.ToTable("UserTokens", (string)null);
-=======
-                    b.ToTable("AspNetUserTokens", (string)null);
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                 });
 
             modelBuilder.Entity("CompanySmartChargingSystem.Domain.Entities.ChargeTransaction", b =>
@@ -465,21 +425,13 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
                     b.HasOne("CompanySmartChargingSystem.Domain.Entities.Contract", "Contract")
                         .WithMany("ChargeTransactions")
                         .HasForeignKey("ContractId")
-<<<<<<< HEAD
-                        .OnDelete(DeleteBehavior.Cascade)
-=======
                         .OnDelete(DeleteBehavior.Restrict)
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                         .IsRequired();
 
                     b.HasOne("CompanySmartChargingSystem.Domain.Entities.Meter", "Meter")
                         .WithMany("ChargeTransactions")
                         .HasForeignKey("MeterId")
-<<<<<<< HEAD
-                        .OnDelete(DeleteBehavior.Cascade)
-=======
                         .OnDelete(DeleteBehavior.Restrict)
->>>>>>> aacf78d07fc73d925ea8f789670f6b7fe8cec2b2
                         .IsRequired();
 
                     b.Navigation("Contract");
@@ -504,6 +456,46 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Meter");
+                });
+
+            modelBuilder.Entity("CompanySmartChargingSystem.Domain.Entities.User", b =>
+                {
+                    b.OwnsMany("CompanySmartChargingSystem.Domain.Entities.RefreshToken", "RefreshTokens", b1 =>
+                        {
+                            b1.Property<string>("UserId")
+                                .HasColumnType("nvarchar(450)");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<DateTime>("Expiration")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("Token")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<DateTime>("createdOn")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<bool>("isNew")
+                                .HasColumnType("bit");
+
+                            b1.Property<DateTime?>("revokedOn")
+                                .HasColumnType("datetime2");
+
+                            b1.HasKey("UserId", "Id");
+
+                            b1.ToTable("RefreshToken");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.Navigation("RefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

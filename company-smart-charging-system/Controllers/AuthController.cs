@@ -49,9 +49,24 @@ namespace company_smart_charging_system.Controllers
                 // Generate JWT token with roles
                 var token = _jwtService.GenerateToken(user, roles);
 
+                var refreshToken = _jwtService.CheckAndCreateNewRefreshToken(user);
+
+                setRefreshTokenInCookie(refreshToken);
+
+                if (refreshToken.isNew)
+                {
+                    user.RefreshTokens.Add(refreshToken);
+
+                    await _userManager.UpdateAsync(user);
+                }
+
+                
+
                 return Ok(new AuthResponse
                 {
                     Token = token,
+                    refreshToken = refreshToken.Token,
+                    refreshTokenExpiration = refreshToken.Expiration,
                     User = new UserInfo
                     {
                         Id = user.Id,
@@ -99,6 +114,14 @@ namespace company_smart_charging_system.Controllers
 
                 // Generate JWT token with roles
                 var token = _jwtService.GenerateToken(user, roles);
+
+                var refreshToken = _jwtService.GenerateRefreshToken();
+
+                setRefreshTokenInCookie(refreshToken);
+
+                user.RefreshTokens.Add(refreshToken);
+
+                await _userManager.UpdateAsync(user);
 
                 return Ok(new AuthResponse
                 {
@@ -149,6 +172,28 @@ namespace company_smart_charging_system.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, new { message = "An error occurred", error = ex.Message });
+            }
+        }
+        [HttpPost("refreshToken")]
+        public async Task<IActionResult> refreshToken()
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+            var refreshTokenResult = await _jwtService.refreshToken(refreshToken);
+            setRefreshTokenInCookie(new RefreshToken { Token = refreshTokenResult.refreshToken, Expiration=refreshTokenResult.refreshTokenExpiration});
+            return Ok(refreshTokenResult);
+        }
+        // helper function
+        
+        private void setRefreshTokenInCookie(RefreshToken refreshToken)
+        {
+            if (refreshToken != null)
+            {
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = refreshToken.Expiration.ToLocalTime(),
+                };
+                Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
             }
         }
     }

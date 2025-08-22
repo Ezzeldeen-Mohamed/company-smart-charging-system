@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace CompanySmartChargingSystem.Application.DTOs
 {
@@ -31,6 +32,9 @@ namespace CompanySmartChargingSystem.Application.DTOs
     public class AuthResponse
     {
         public string Token { get; set; } = string.Empty;
+        [JsonIgnore]
+        public string refreshToken { get; set; } 
+        public DateTime refreshTokenExpiration { get; set; } 
         public UserInfo User { get; set; } = new UserInfo();
         public string Message { get; set; } = string.Empty;
     }

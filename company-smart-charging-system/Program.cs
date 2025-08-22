@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Diagnostics;
+using CompanySmartChargingSystem.Infrastructure.JWT;
+using CompanySmartChargingSystem.Infrastructure.DataSeeding;
+using CompanySmartChargingSystem.Application.Services.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,9 +36,21 @@ builder.Services.AddIdentity<User, IdentityRole>(optin => {
 builder.Services.AddScoped(typeof(IBaseRepo<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IJWT, JWTRepo>();
-builder.Services.AddScoped<IChargeTransactionService, ChargeTransaction>();
+builder.Services.AddScoped<IChargeTransactionService, ChargeTransactionService>();
 builder.Services.Configure<JWTConfig>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddAutoMapper(typeof(CompanySmartChargingSystem.Application.DTOs.MappingProfile));
+
+builder.Services.AddExceptionHandler(options =>
+{
+    options.ExceptionHandler = async context =>
+    {
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+
+        await context.Response.WriteAsync("{\"error\":\"Something went wrong.\"}");
+    };
+});
+
 
 // Configure JWT Authentication
 var jwtConfig = builder.Configuration.GetSection("Jwt").Get<JWTConfig>();
@@ -61,6 +76,10 @@ builder.Services.AddAuthentication(options =>
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
