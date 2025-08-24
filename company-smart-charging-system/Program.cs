@@ -15,6 +15,9 @@ using CompanySmartChargingSystem.Application.Services.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -37,6 +40,7 @@ builder.Services.AddScoped(typeof(IBaseRepo<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IJWT, JWTRepo>();
 builder.Services.AddScoped<IChargeTransactionService, ChargeTransactionService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.Configure<JWTConfig>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddAutoMapper(typeof(CompanySmartChargingSystem.Application.DTOs.MappingProfile));
 
@@ -72,6 +76,8 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Key))
     };
 });
+
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

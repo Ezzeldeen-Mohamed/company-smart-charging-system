@@ -4,6 +4,7 @@ using CompanySmartChargingSystem.Domain.Entities;
 using CompanySmartChargingSystem.Infrastructure.JWT;
 using CompanySmartChargingSystem.Application.DTOs;
 using System.Security.Claims;
+using CompanySmartChargingSystem.Application.Services.IService;
 
 namespace company_smart_charging_system.Controllers
 {
@@ -14,12 +15,15 @@ namespace company_smart_charging_system.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IJWT _jwtService;
+        private readonly IAuthService authService;
 
         public AuthController(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IJWT jwtService)
+            IJWT jwtService,
+            IAuthService authService)
         {
+            this.authService = authService;
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtService = jwtService;
@@ -152,22 +156,13 @@ namespace company_smart_charging_system.Controllers
                 {
                     return Unauthorized(new { message = "User not authenticated" });
                 }
-
-                var user = await _userManager.FindByIdAsync(userId);
-                if (user == null)
+                var userInfo = await authService.getCurrentUser(userId);
+                if (userInfo == null)
                 {
                     return NotFound(new { message = "User not found" });
                 }
+                return Ok(userInfo);
 
-                var roles = await _userManager.GetRolesAsync(user);
-
-                return Ok(new UserInfo
-                {
-                    Id = user.Id,
-                    Email = user.Email,
-                    UserName = user.UserName,
-                    Roles = roles.ToList()
-                });
             }
             catch (Exception ex)
             {
