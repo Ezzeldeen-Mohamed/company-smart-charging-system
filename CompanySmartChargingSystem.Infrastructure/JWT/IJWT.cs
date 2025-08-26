@@ -1,5 +1,6 @@
 ﻿using CompanySmartChargingSystem.Application.DTOs;
 using CompanySmartChargingSystem.Domain.Entities;
+using Duende.IdentityServer.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;

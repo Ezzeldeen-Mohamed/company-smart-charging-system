@@ -1,22 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CompanySmartChargingSystem.Domain.Entities
 {
-    [Owned]
-    public class RefreshToken
+    public class Meter : BaseEntity
     {
-        public string Token { get; set; }
-        public bool isNew { get; set; }
-        public DateTime Expiration { get; set; }
-        public bool IsActive => DateTime.UtcNow < Expiration;
-        public DateTime createdOn { get; set; } = DateTime.UtcNow;
-        public DateTime? revokedOn { get; set; } = null;
+        [Required]
+        [MaxLength(50)]
+        public string Serial { get; set; } = string.Empty;
 
+        public string ChargeNumber { get; set; } = string.Empty;
 
+        public bool IsUsed { get; set; }
+
+        public ICollection<Contract>? Contracts { get; set; }
+        public ICollection<ChargeTransaction>? ChargeTransactions { get; set; }
     }
+
 }

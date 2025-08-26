@@ -23,6 +23,8 @@ MyApp.sln
 │   ├── Persistence
 │   ├── Configurations
 │   └── ExternalServices
+│   └── AppDbContext
+│   └── Migrations
 │
 └── MyApp.API
     ├── Controllers
@@ -32,4 +34,18 @@ MyApp.sln
     ├── Program.cs
     └── appsettings.json
 
+
+
+لو هتكتب Unit Tests → إعمل Dependencies على Application و Domain.                    do test for logic of application  (no Database)
+
+لو هتكتب Integration Tests → إعمل Dependencies على API و Infrastructure كمان.        Do test for integration between controllers and database ( Inmomery DB)
+
+
+
+
+
+
     */
+
+
+

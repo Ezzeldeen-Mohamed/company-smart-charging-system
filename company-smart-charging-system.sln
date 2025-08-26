@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompanySmartChargingSystem.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompanySmartChargingSystem.Application", "CompanySmartChargingSystem.Application\CompanySmartChargingSystem.Application.csproj", "{EE764B49-3898-4777-81EE-0770AD42312D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompanySmartChargingSystem.Test", "CompanySmartChargingSystem.Test\CompanySmartChargingSystem.Test.csproj", "{E4295C5A-C090-46FF-9D8F-CBC590E97E28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{EE764B49-3898-4777-81EE-0770AD42312D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE764B49-3898-4777-81EE-0770AD42312D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE764B49-3898-4777-81EE-0770AD42312D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4295C5A-C090-46FF-9D8F-CBC590E97E28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4295C5A-C090-46FF-9D8F-CBC590E97E28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4295C5A-C090-46FF-9D8F-CBC590E97E28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4295C5A-C090-46FF-9D8F-CBC590E97E28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
