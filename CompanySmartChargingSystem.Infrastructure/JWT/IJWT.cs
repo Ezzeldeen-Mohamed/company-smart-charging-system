@@ -13,8 +13,8 @@ namespace CompanySmartChargingSystem.Infrastructure.JWT
     public interface IJWT
     {
         public string GenerateToken(User user, IList<string> roles);
-        public RefreshToken GenerateRefreshToken();
-        public RefreshToken CheckAndCreateNewRefreshToken(User user);
+        public RefreshTokenModel GenerateRefreshToken();
+        public RefreshTokenModel CheckAndCreateNewRefreshToken(User user);
         public Task<AuthResponse> refreshToken(string refreshToken);
     }
 }

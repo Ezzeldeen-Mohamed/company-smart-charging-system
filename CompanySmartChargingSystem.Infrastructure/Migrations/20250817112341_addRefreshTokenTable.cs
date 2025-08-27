@@ -93,7 +93,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RefreshToken",
+                name: "RefreshTokenModel",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -380,7 +380,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
                 name: "ChargeTransactions");
 
             migrationBuilder.DropTable(
-                name: "RefreshToken");
+                name: "RefreshTokenModel");
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");

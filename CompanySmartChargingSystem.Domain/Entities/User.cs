@@ -10,6 +10,6 @@ namespace CompanySmartChargingSystem.Domain.Entities
 {
     public class User : IdentityUser     
     {
-        public List<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+        public List<RefreshTokenModel> RefreshTokens { get; set; } = new List<RefreshTokenModel>();
     }
 }

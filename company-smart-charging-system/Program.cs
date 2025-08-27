@@ -1,91 +1,59 @@
+using company_smart_charging_system;
+using company_smart_charging_system.Extensions;
+using company_smart_charging_system.Services;
+using CompanySmartChargingSystem.Application.Services.IService;
+using CompanySmartChargingSystem.Application.Services.Service;
 using CompanySmartChargingSystem.Domain.ApplicationDbContext;
 using CompanySmartChargingSystem.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Serilog;
-using CompanySmartChargingSystem.Application.Services.IService;
 using CompanySmartChargingSystem.Infrastructure;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.AspNetCore.Diagnostics;
-using CompanySmartChargingSystem.Infrastructure.JWT;
 using CompanySmartChargingSystem.Infrastructure.DataSeeding;
-using CompanySmartChargingSystem.Application.Services.Service;
+using CompanySmartChargingSystem.Infrastructure.JWT;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using System.Globalization;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Host.UseSerilog((context, loggerconfig) => loggerconfig.ReadFrom.Configuration(context.Configuration));
-
-builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("Connect")));
-builder.Services.AddIdentity<User, IdentityRole>(optin => {
-    optin.Password.RequiredLength = 6;
-    optin.Password.RequireLowercase = true;
-    optin.Password.RequireUppercase = true;
-    optin.Password.RequireNonAlphanumeric = false;
-    optin.User.RequireUniqueEmail = true;
-}).AddEntityFrameworkStores<AppDbContext>();
-
-builder.Services.AddScoped(typeof(IBaseRepo<>), typeof(GenericRepository<>));
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IJWT, JWTRepo>();
-builder.Services.AddScoped<IChargeTransactionService, ChargeTransactionService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.Configure<JWTConfig>(builder.Configuration.GetSection("Jwt"));
-builder.Services.AddAutoMapper(typeof(CompanySmartChargingSystem.Application.DTOs.MappingProfile));
-
-builder.Services.AddExceptionHandler(options =>
+// Add localization
+builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
-    options.ExceptionHandler = async context =>
-    {
-        context.Response.StatusCode = 500;
-        context.Response.ContentType = "application/json";
-
-        await context.Response.WriteAsync("{\"error\":\"Something went wrong.\"}");
-    };
+    var supportedCultures = new[] { new CultureInfo("en"), new CultureInfo("ar") };
+    
+    options.DefaultRequestCulture = new RequestCulture("ar");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
 });
 
+// Register custom localization service
+builder.Services.AddScoped<ILocalizationService, LocalizationService>();
 
-// Configure JWT Authentication
-var jwtConfig = builder.Configuration.GetSection("Jwt").Get<JWTConfig>();
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtConfig.Issuer,
-        ValidAudience = jwtConfig.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Key))
-    };
-});
+// Grouped extension methods
+builder.Services.AddApiServices();
+builder.Host.AddLoggingServices();
+builder.Services.addDatabaseServices(builder.Configuration);
+builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddMapperServices();
+builder.Services.AddCachingServices();
+builder.Services.AddCustomExceptionHandler();
 
-builder.Services.AddMemoryCache();
+
+
+// Add your application services (repositories, unit of work, etc.)
+builder.Services.addServicesAndRepos();
+
 
 var app = builder.Build();
 
+app.UseRequestLocalization();
+
 app.UseMiddleware<ExceptionHandlerMiddleware>();
-
-
-
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -100,6 +68,15 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Test localization endpoint
+app.MapGet("/api/test-localization", (ILocalizationService localizer) =>
+{
+    return new { 
+        message = localizer.GetString("InvalidEmailOrPassword"),
+        culture = System.Globalization.CultureInfo.CurrentUICulture.Name
+    };
+});
 
 // Seed Identity data (roles and admin user)
 await IdentityDataSeeder.SeedAsync(app.Services);

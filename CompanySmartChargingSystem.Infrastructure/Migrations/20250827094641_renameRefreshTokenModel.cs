@@ -5,25 +5,18 @@
 namespace CompanySmartChargingSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class addIsNewFieldToRefreshToken : Migration
+    public partial class renameRefreshTokenModel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "isNew",
-                table: "RefreshTokenModel",
-                type: "bit",
-                nullable: false,
-                defaultValue: false);
+
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "isNew",
-                table: "RefreshTokenModel");
+
         }
     }
 }

@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using CompanySmartChargingSystem.Domain.Entities;
 using CompanySmartChargingSystem.Infrastructure.JWT;
 using CompanySmartChargingSystem.Application.DTOs;
 using System.Security.Claims;
 using CompanySmartChargingSystem.Application.Services.IService;
-
+using company_smart_charging_system.Services;
 namespace company_smart_charging_system.Controllers
 {
     [ApiController]
@@ -16,17 +17,20 @@ namespace company_smart_charging_system.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly IJWT _jwtService;
         private readonly IAuthService authService;
+        private readonly ILocalizationService _localizer;
 
         public AuthController(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
             IJWT jwtService,
-            IAuthService authService)
+            IAuthService authService,
+            ILocalizationService localizer)
         {
             this.authService = authService;
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtService = jwtService;
+            _localizer = localizer;
         }
 
         [HttpPost("login")]
@@ -34,37 +38,29 @@ namespace company_smart_charging_system.Controllers
         {
             try
             {
-                
                 var user = await _userManager.FindByEmailAsync(request.Email);
                 if (user == null)
                 {
-                    return Unauthorized(new { message = "Invalid email or password" });
+                    return Unauthorized(new { message = _localizer.GetString("InvalidEmailOrPassword") });
                 }
 
                 var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
                 if (!result.Succeeded)
                 {
-                    return Unauthorized(new { message = "Invalid email or password" });
+                    return Unauthorized(new { message = _localizer.GetString("InvalidEmailOrPassword") });
                 }
 
-                // Get user roles
                 var roles = await _userManager.GetRolesAsync(user);
-
-                // Generate JWT token with roles
                 var token = _jwtService.GenerateToken(user, roles);
 
                 var refreshToken = _jwtService.CheckAndCreateNewRefreshToken(user);
-
                 setRefreshTokenInCookie(refreshToken);
 
                 if (refreshToken.isNew)
                 {
                     user.RefreshTokens.Add(refreshToken);
-
                     await _userManager.UpdateAsync(user);
                 }
-
-                
 
                 return Ok(new AuthResponse
                 {
@@ -82,7 +78,7 @@ namespace company_smart_charging_system.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "An error occurred during login", error = ex.Message });
+                return StatusCode(500, new { message = _localizer.GetString("LoginError"), error = ex.Message });
             }
         }
 
@@ -94,7 +90,7 @@ namespace company_smart_charging_system.Controllers
                 var existingUser = await _userManager.FindByEmailAsync(request.Email);
                 if (existingUser != null)
                 {
-                    return BadRequest(new { message = "User with this email already exists" });
+                    return BadRequest(new { message = _localizer.GetString("UserAlreadyExists") });
                 }
 
                 var user = new User
@@ -107,29 +103,27 @@ namespace company_smart_charging_system.Controllers
                 var result = await _userManager.CreateAsync(user, request.Password);
                 if (!result.Succeeded)
                 {
-                    return BadRequest(new { message = "Registration failed", errors = result.Errors.Select(e => e.Description) });
+                    return BadRequest(new
+                    {
+                        message = _localizer.GetString("RegistrationFailed"),
+                        errors = result.Errors.Select(e => e.Description)
+                    });
                 }
 
-                // Assign default role (User)
                 await _userManager.AddToRoleAsync(user, "User");
-
-                // Get user roles
                 var roles = await _userManager.GetRolesAsync(user);
 
-                // Generate JWT token with roles
                 var token = _jwtService.GenerateToken(user, roles);
 
                 var refreshToken = _jwtService.GenerateRefreshToken();
-
                 setRefreshTokenInCookie(refreshToken);
 
                 user.RefreshTokens.Add(refreshToken);
-
                 await _userManager.UpdateAsync(user);
 
                 return Ok(new AuthResponse
                 {
-                    Message = "User registered successfully",
+                    Message = _localizer.GetString("RegistrationSuccess"),
                     Token = token,
                     User = new UserInfo
                     {
@@ -142,7 +136,7 @@ namespace company_smart_charging_system.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "An error occurred during registration", error = ex.Message });
+                return StatusCode(500, new { message = _localizer.GetString("RegistrationError"), error = ex.Message });
             }
         }
 
@@ -154,32 +148,40 @@ namespace company_smart_charging_system.Controllers
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(userId))
                 {
-                    return Unauthorized(new { message = "User not authenticated" });
+                    return Unauthorized(new { message = _localizer.GetString("UserNotAuthenticated") });
                 }
+
                 var userInfo = await authService.getCurrentUser(userId);
                 if (userInfo == null)
                 {
-                    return NotFound(new { message = "User not found" });
+                    return NotFound(new { message = _localizer.GetString("UserNotFound") });
                 }
-                return Ok(userInfo);
 
+                return Ok(userInfo);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "An error occurred", error = ex.Message });
+                return StatusCode(500, new { message = _localizer.GetString("GeneralError"), error = ex.Message });
             }
         }
+
         [HttpPost("refreshToken")]
         public async Task<IActionResult> refreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
             var refreshTokenResult = await _jwtService.refreshToken(refreshToken);
-            setRefreshTokenInCookie(new RefreshToken { Token = refreshTokenResult.refreshToken, Expiration=refreshTokenResult.refreshTokenExpiration});
+
+            setRefreshTokenInCookie(new RefreshTokenModel
+            {
+                Token = refreshTokenResult.refreshToken,
+                Expiration = refreshTokenResult.refreshTokenExpiration
+            });
+
             return Ok(refreshTokenResult);
         }
+
         // helper function
-        
-        private void setRefreshTokenInCookie(RefreshToken refreshToken)
+        private void setRefreshTokenInCookie(RefreshTokenModel refreshToken)
         {
             if (refreshToken != null)
             {

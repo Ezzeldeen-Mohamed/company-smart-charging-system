@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CompanySmartChargingSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250817112341_addRefreshTokenTable")]
-    partial class addRefreshTokenTable
+    [Migration("20250827094641_renameRefreshTokenModel")]
+    partial class renameRefreshTokenModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -483,6 +483,9 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
                             b1.Property<DateTime>("createdOn")
                                 .HasColumnType("datetime2");
+
+                            b1.Property<bool>("isNew")
+                                .HasColumnType("bit");
 
                             b1.Property<DateTime?>("revokedOn")
                                 .HasColumnType("datetime2");

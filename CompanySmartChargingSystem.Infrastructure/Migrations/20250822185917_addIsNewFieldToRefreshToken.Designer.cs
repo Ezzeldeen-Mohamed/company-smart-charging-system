@@ -463,7 +463,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("CompanySmartChargingSystem.Domain.Entities.User", b =>
                 {
-                    b.OwnsMany("CompanySmartChargingSystem.Domain.Entities.RefreshToken", "RefreshTokens", b1 =>
+                    b.OwnsMany("CompanySmartChargingSystem.Domain.Entities.RefreshTokenModel", "RefreshTokens", b1 =>
                         {
                             b1.Property<string>("UserId")
                                 .HasColumnType("nvarchar(450)");
@@ -492,7 +492,7 @@ namespace CompanySmartChargingSystem.Infrastructure.Migrations
 
                             b1.HasKey("UserId", "Id");
 
-                            b1.ToTable("RefreshToken");
+                            b1.ToTable("RefreshTokenModel");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");

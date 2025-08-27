@@ -26,13 +26,13 @@ namespace CompanySmartChargingSystem.Infrastructure.JWT
             this.jwtConfig = jwtConfig.Value;
         }
 
-        public RefreshToken CheckAndCreateNewRefreshToken(User user)
+        public RefreshTokenModel CheckAndCreateNewRefreshToken(User user)
         {
             if (user.RefreshTokens.Any(t => t.IsActive))
             {
                 var activeToken = user.RefreshTokens.FirstOrDefault(t => t.IsActive);
                 // If the active token is not expired, return it
-                return new RefreshToken
+                return new RefreshTokenModel
                 {
                     isNew = false,
                     Token = activeToken.Token,
@@ -44,7 +44,7 @@ namespace CompanySmartChargingSystem.Infrastructure.JWT
                 var Token = GenerateRefreshToken();
                 
                 // If the active token is not expired, return it
-                return new RefreshToken
+                return new RefreshTokenModel
                 {
                     isNew = true,
                     Token = Token.Token,
@@ -53,12 +53,12 @@ namespace CompanySmartChargingSystem.Infrastructure.JWT
             }
         }
 
-        public RefreshToken GenerateRefreshToken()
+        public RefreshTokenModel GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
             using var generator = new RNGCryptoServiceProvider();
             generator.GetBytes(randomNumber);
-            return new RefreshToken
+            return new RefreshTokenModel
             {
                 Token = Convert.ToBase64String(randomNumber),
                 Expiration = DateTime.UtcNow.AddDays(7),
