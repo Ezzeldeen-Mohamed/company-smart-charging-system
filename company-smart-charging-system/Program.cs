@@ -8,6 +8,9 @@ using CompanySmartChargingSystem.Domain.Entities;
 using CompanySmartChargingSystem.Infrastructure;
 using CompanySmartChargingSystem.Infrastructure.DataSeeding;
 using CompanySmartChargingSystem.Infrastructure.JWT;
+using CompanySmartChargingSystem.Infrastructure.Repositories;
+using CompanySmartChargingSystem.Infrastructure.Repositories.IRepo;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
@@ -43,6 +46,12 @@ builder.Services.AddMapperServices();
 builder.Services.AddCachingServices();
 builder.Services.AddCustomExceptionHandler();
 
+builder.Services.AddScoped<IContractBackgroundService, ContractBackgroundService>();
+
+
+
+builder.Services.AddHangfire(config =>
+    config.UseSqlServerStorage(builder.Configuration.GetConnectionString("Connect")));
 
 
 // Add your application services (repositories, unit of work, etc.)
@@ -50,6 +59,13 @@ builder.Services.addServicesAndRepos();
 
 
 var app = builder.Build();
+
+app.UseHangfireDashboard();
+
+RecurringJob.AddOrUpdate<IContractBackgroundService>(
+    "close-inactive-contracts",
+    service => service.CloseInactiveContractsAsync(),
+    Cron.Daily);
 
 app.UseRequestLocalization();
 
